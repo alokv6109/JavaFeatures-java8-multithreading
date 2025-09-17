@@ -81,7 +81,9 @@ class SharedResourceForOptimisticResource{
     StampedLock lock = new StampedLock();
 
     public void producer(){
+        System.out.println("the reading is done by " + Thread.currentThread().getName());
         long stamp = lock.tryOptimisticRead();
+        System.out.println("after read : "+ stamp);
         try {
             System.out.println("Read lock acquired by : " + Thread.currentThread().getName() );
             isAvailable = true;
@@ -101,6 +103,7 @@ class SharedResourceForOptimisticResource{
 
     public void consumer(){
         long l=  lock.writeLock();
+        System.out.println("after wite " + l);
         try {
             System.out.println("Write Lock acuired by : "+ Thread.currentThread().getName());
             isAvailable =false;

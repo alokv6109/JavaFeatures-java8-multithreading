@@ -10,7 +10,7 @@ public class Stuff {
     }
     
     public static void doStuff(String name){
-        System.out.println("I am doing stuff, overloaded stuff method");
+        System.out.println("I am doing stuff, overloaded stuff method with one argument");
         System.out.println(LocalDateTime.now().toString() + " " +  name);
     }
 

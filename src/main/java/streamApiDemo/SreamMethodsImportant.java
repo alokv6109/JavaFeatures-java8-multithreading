@@ -82,6 +82,13 @@ public class SreamMethodsImportant {
             Prints the sorted squared numbers and the maximum value.
          */
 
+        Integer reduce1 = integers.stream()
+                .filter(e -> e % 2 == 0)
+                .map(e -> e * e)
+                .sorted((a, b) -> b - a)
+                .peek(e -> System.out.println(e))
+                .reduce(0, (a, b) -> a > b ? a : b);
+
 
         Integer integer = integers.stream()
                 .filter(a -> a % 2 == 0)
@@ -121,18 +128,25 @@ public class SreamMethodsImportant {
                 .collect(Collectors.groupingBy(e -> e.getDeptId(), Collectors.counting()));
 
 
-//        Map<Integer, List<Employee>> collect = employees.stream().filter(e -> e.getSalary() > 40000.0)
-//        .collect(Collectors.groupingBy(e -> e.getDeptId()));
+        Map<Integer, List<Employee>> collect1 = employees.stream().filter(e -> e.getSalary() > 40000.0)
+        .collect(Collectors.groupingBy(e -> e.getDeptId()));
+        System.out.println("-----------Collect 1 -----------------");
+        collect1.forEach((k, v)-> System.out.println("the grouped data " + k + " : "  + v));
+
+
         collect.forEach((k, v)-> System.out.println("the grouped data " + k + " : "  + v));
 
         int[]  nums = new int[]{5, 4,4, 0, 1};
 //        List<Integer> integerList = nums.;
-//        Map<Integer, Long> collect3 = Arrays.stream(nums)
-//                .boxed()
-//                .collect(Collectors.groupingBy(e -> e, (Integer)Collectors.counting()));
-//        Map<Long, List<Integer>> collect4 = collect3.entrySet().stream()
-//                .collect(Collectors.groupingBy(e -> e.getValue(), Collectors.mapping(Map.Entry::getKey, Collectors.toList())));
-//        Map<Department, List<Employee>> byDept = employees.stream().collect(Collectors.groupingBy(Employee::getDepartment));
+//        person -> frequenct
+        Map<Integer, Long> collect3 = Arrays.stream(nums)
+                .boxed()
+                .collect(Collectors.groupingBy(e -> e, Collectors.counting()));
+        // frequncy ->> list<Integer>
+        Map<Long, List<Integer>> collect4 = collect3.entrySet().stream()
+                .collect(Collectors.groupingBy(e -> e.getValue(), Collectors.mapping(Map.Entry::getKey, Collectors.toList())));
+        System.out.println("-------------collect 4-----------------------");
+        System.out.println(collect4);
 
 
         /*
@@ -158,12 +172,14 @@ public class SreamMethodsImportant {
 
         String strings[] = {"alok", "aniket", "tashi", "vaish", null, "greEns", ""};
 
-        String collect1 = Arrays.stream(strings).filter(e -> {
+        String collect12 = Arrays.stream(strings).filter(e -> {
             if(e == null) return false;
             if(e.isEmpty()) return false;
             return true;
-        }).map(e -> e.toUpperCase()).distinct().collect(Collectors.joining(" , "));
-        System.out.println(collect1);
+        }).map(e -> e.toUpperCase())
+                        .distinct()
+                .collect(Collectors.joining(" , "));
+        System.out.println(collect12);
 
         /*
         4. Question: Transaction Analysis
@@ -197,7 +213,8 @@ public class SreamMethodsImportant {
                 .filter(e -> e.getDateOfTransaction().getYear() == 2023)
                 .filter(e -> e.getAmount() > 1000)
                 .sorted((a, b) -> (int) (a.getAmount() - b.getAmount()))
-                .peek(e -> System.out.println("the amount in tx is " + e.getAmount())).map(e -> e.getAmount())
+                .peek(e -> System.out.println("the amount in tx is " + e.getAmount()))
+                        .map(e -> e.getAmount())
                 .reduce((double) 0, (a, b) -> a + b);
         System.out.println(reduce);
 
@@ -223,7 +240,9 @@ public class SreamMethodsImportant {
 
 
 
-        integers.stream().filter(e -> e > 50000).findFirst()
+        integers.stream()
+                .filter(e -> e > 50000)
+                .findFirst()
                 .ifPresentOrElse(e -> System.out.println(2*e), ()-> System.out.println("no number was found"));
 
         /*
@@ -257,11 +276,12 @@ public class SreamMethodsImportant {
 
 
 
-        double averagePrice = products.stream().filter(e -> e.getCategory().equals("akk"))
-                .map(e -> e.getAmount()).peek(e -> System.out.println("the price is " + e))
-                .collect(Collectors.averagingDouble(e -> e));
+        double averagePrice = products.stream()
+                .filter(e -> e.getCategory().equals("akk"))
+//                .map(e -> e.getAmount())
+                .peek(e -> System.out.println("the price is " + e))
+                .collect(Collectors.averagingDouble(e -> e.getAmount()));
         System.out.println(averagePrice);
-//            products.parallelStream()
 
         /*
 
@@ -285,7 +305,7 @@ public class SreamMethodsImportant {
 
         String string = "sdfsfdcvgccAATTuuhjcdhghcgxxcc  kjjhgvhjghjghjg";
         String collect2 = string.chars()
-                .peek(e -> System.out.println("charsb code " +e))
+//                .peek(e -> System.out.println("charsb code " +e))
                 .mapToObj(e -> (char) e)
 //                .peek(e -> System.out.println("the car is " + e))
                 .filter(e -> !"aeiouAEIOU".contains(String.valueOf(e)))
@@ -305,9 +325,10 @@ public class SreamMethodsImportant {
 
          */
 
-//        String s = "a1 b2 c3";
-//        s.chars().mapToObj(e -> (char) e)
-//                .collect(Collectors.toMap())
+        String s = "a1 b2 c3";
+        List<Character> collect5 = s.chars()
+                .mapToObj(e -> (char) e)
+                .collect(Collectors.toList());
 
         /*
 
@@ -334,14 +355,19 @@ Terminal Operations: collect()
         );
 
         // Process the nested lists
-        Set<Integer> resultSet = nestedLists.stream() // Create a stream of lists
-                .flatMap(List::stream) // Flatten the nested lists into a single stream
+        Set<Integer> resultSet = nestedLists.stream()
+                .flatMap(list-> list.stream()) // Flatten the nested lists into a single stream
                 .filter(num -> num >= 10) // Filter out numbers less than 10
                 .collect(Collectors.toSet()); // Collect the numbers into a Set
 
         // Print the result
         System.out.println("Filtered and Flattened Set: " + resultSet);
 
+        /*
+
+
+        {"type": "message_stream_complete", "conversation_id": "686eaf55-ee5c-8011-95ca-ec85569892f9"}
+         */
 
 
 
